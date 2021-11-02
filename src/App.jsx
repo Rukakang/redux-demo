@@ -13,7 +13,7 @@ const App =() => {
     )
 }
 const BigSon = () => <section>大儿子<User/></section>
-const SecondSon = () => <section>二儿子<UserModifier/></section>
+const SecondSon = () => <section>二儿子<Wrapper/></section>
 const SmallSon = () => <section>小儿子</section>
 
 const User = () =>{
@@ -33,17 +33,21 @@ const reducer = (state,{type,payload})=>{
         return state
     }
 }
-const UserModifier = () => {
-    const {appState,setAppState} = useContext(appContext)
+
+const UserModifier = ({dispatch,state}) => {
     const onChange = (e) =>{
-        let newState = reducer(appState,{type:"updateState",payload:{name:e.target.value}})
-        setAppState(newState)
+        dispatch({type:"updateState",payload:{name:e.target.value}})
     }
     return(
-        <input value={appState.user.name} onChange={onChange}/>
+        <input value={state.user.name} onChange={onChange}/>
     )
 }
-
-
+const Wrapper =()=>{
+    const {appState,setAppState} = useContext(appContext)
+    const dispatch =(action)=>{
+        setAppState(reducer(appState,action))
+    }
+    return <UserModifier dispatch={dispatch} state={appState}/>
+}
 
 export default App;
