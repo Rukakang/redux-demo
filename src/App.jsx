@@ -42,12 +42,17 @@ const UserModifier = ({dispatch,state}) => {
         <input value={state.user.name} onChange={onChange}/>
     )
 }
-const Wrapper =()=>{
-    const {appState,setAppState} = useContext(appContext)
-    const dispatch =(action)=>{
-        setAppState(reducer(appState,action))
+const createWrapper = (Component) =>{
+    const Wrapper =()=>{
+        const {appState,setAppState} = useContext(appContext)
+        const dispatch =(action)=>{
+            setAppState(reducer(appState,action))
+        }
+        return <Component dispatch={dispatch} state={appState}/>
     }
-    return <UserModifier dispatch={dispatch} state={appState}/>
+    return Wrapper
 }
+const Wrapper = createWrapper(UserModifier)
+
 
 export default App;
