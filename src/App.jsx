@@ -13,7 +13,7 @@ const App =() => {
     )
 }
 const BigSon = () => <section>大儿子<User/></section>
-const SecondSon = () => <section>二儿子<Wrapper/></section>
+const SecondSon = () => <section>二儿子<UserModifier/></section>
 const SmallSon = () => <section>小儿子</section>
 
 const User = () =>{
@@ -34,7 +34,7 @@ const reducer = (state,{type,payload})=>{
     }
 }
 
-const UserModifier = ({dispatch,state}) => {
+const _UserModifier = ({dispatch,state}) => {
     const onChange = (e) =>{
         dispatch({type:"updateState",payload:{name:e.target.value}})
     }
@@ -52,7 +52,7 @@ const createWrapper = (Component) =>{
     }
     return Wrapper
 }
-const Wrapper = createWrapper(UserModifier)
+const UserModifier = createWrapper(_UserModifier)
 
 
 export default App;
