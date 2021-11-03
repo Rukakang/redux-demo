@@ -36,24 +36,23 @@ const reducer = (state,{type,payload})=>{
 
 
 const createWrapper = (Component) =>{
-    const Wrapper =(props)=>{
+    return (props)=>{
         const {appState,setAppState} = useContext(appContext)
         const dispatch =(action)=>{
             setAppState(reducer(appState,action))
         }
         return <Component {...props} dispatch={dispatch} state={appState}/>
     }
-    return Wrapper
+
 }
-const _UserModifier = ({dispatch,state,children}) => {  //解构赋值，此时的pros为:{x:'d',children:'hhh',dispatch:(action)=>{},state:{user:{name:'bobojier',age:18}}}
+const UserModifier = createWrapper(({dispatch,state,children}) => {  //解构赋值，此时的pros为:{x:'d',children:'hhh',dispatch:(action)=>{},state:{user:{name:'bobojier',age:18}}}
     const onChange = (e) =>{
         dispatch({type:"updateState",payload:{name:e.target.value}})
     }
     return(
         <input value={state.user.name} onChange={onChange}/>
     )
-}
-const UserModifier = createWrapper(_UserModifier)
+})
 
 
 export default App;
