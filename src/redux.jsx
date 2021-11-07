@@ -37,11 +37,11 @@ export const reducer = (state,{type,payload})=>{
     }
 }
 
-export const connect = (Component) =>{
+export const connect = (selector) => (Component) =>{  //柯里化
     return (props)=>{  //接受一个组件，返回一个组件
         const {state,setState} = useContext(appContext)
         const[,update] = useState({})
-
+        const data =selector ? selector(state) :{state:state}  //如果传了state就是局部的state,没传就是全局的state
         //订阅store
         useEffect(()=>{
             store.subscribe(()=>{
@@ -52,6 +52,6 @@ export const connect = (Component) =>{
         const dispatch =(action)=>{
             setState(reducer(state,action))
         }
-        return <Component {...props} dispatch={dispatch} state={state}/> //返回的组件中又引入了子组件，子组件的props是包裹子组件的组件透传过来的
+        return <Component {...data} {...props} dispatch={dispatch} /> //返回的组件中又引入了子组件，子组件的props是包裹子组件的组件透传过来的
     }
 }

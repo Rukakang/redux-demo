@@ -26,7 +26,7 @@ const SmallSon = () => {
     return <section>小儿子</section>
 }
 
-const UserModifier = connect(({dispatch,state,children}) => {  //解构赋值，此时的pros为:{x:'d',children:'hhh',dispatch:(action)=>{},state:{user:{name:'bobojier',age:18}}}
+const UserModifier = connect()(({dispatch,state,children}) => {  //解构赋值，此时的pros为:{x:'d',children:'hhh',dispatch:(action)=>{},state:{user:{name:'bobojier',age:18}}}
     console.log('userModifier执行了' + Math.random())
     const onChange = (e) =>{
         dispatch({type:"updateState",payload:{name:e.target.value}})
@@ -35,10 +35,12 @@ const UserModifier = connect(({dispatch,state,children}) => {  //解构赋值，
         <input value={state.user.name} onChange={onChange}/>
     )
 })
-const User =connect(
-    ({state}) =>{
+const User =connect((state)=>{
+    return {user:state.user}  //柯里化
+})(
+    ({user}) =>{
         console.log('user执行了' + Math.random())
-        return(<div>{state.user.name}</div>)
+        return(<div>{user.name}</div>)
     }
 )
 
