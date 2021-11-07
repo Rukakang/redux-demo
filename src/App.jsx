@@ -1,14 +1,17 @@
-import React,{useState,useContext} from 'react';
+import React,{useState,useContext,useMemo} from 'react';
 
 const appContext = React.createContext(null);
 const App =() => {
     const [appState,setAppState] = useState({user:{name:'bobojier',age:18}})
     const contextValue ={appState,setAppState}
+    const X = useMemo(()=>{
+        return <SmallSon/>
+    },[appState.user.age])
     return(
         <appContext.Provider value={contextValue}>
             <BigSon/>
             <SecondSon/>
-            <SmallSon/>
+            {X}
         </appContext.Provider>
     )
 }
@@ -21,6 +24,7 @@ const SecondSon = () => {
     console.log('二儿子执行了' + Math.random())
     return <section>二儿子<UserModifier x={'d'}>hhh</UserModifier></section>
 }
+
 const SmallSon = () => {
     console.log('小儿子执行了' + Math.random())
     return <section>小儿子</section>
