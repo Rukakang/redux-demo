@@ -10,10 +10,11 @@ export const store = {
         }
     },
     setState(newState){   //store的setState不是hooks的setState
+        console.log(store.linsterners)
         store.state = newState
         store.linsterners.map(fn=>fn(store.state)) //setState的时候，订阅了store变化的监听者都进行函数回调
     },
-    linsterners:[],
+    linsterners:[], //存放了全部组件的更新函数，当store变化的时候，会导致所有组件都更新
     subscribe(fn){
         //store发生变化时要执行的函数放入数组里
         store.linsterners.push(fn)

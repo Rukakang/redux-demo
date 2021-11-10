@@ -36,7 +36,7 @@ const UserModifier = connect()(({dispatch,state,children}) => {  //解构赋值�
     )
 })
 const User =connect((state)=>{
-    return {user:state.user}  //柯里化
+    return {user:state.user}  //柯里化,析构出自己组件想用的那部分数据
 })(
     ({user}) =>{
         console.log('user执行了' + Math.random())
