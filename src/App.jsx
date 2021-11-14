@@ -28,7 +28,7 @@ let store = createStore(reducer,state)
 
 const App =() => {
     //const [appState,setAppState] = useState({user:{name:'bobojier',age:18}})
-   // const contextValue ={appState,setAppState}
+    // const contextValue ={appState,setAppState}
     return(
         <Provider store={store}>
             <BigSon/>
@@ -36,7 +36,6 @@ const App =() => {
             <SmallSon/>
         </Provider>
     )
-
 }
 //()=>xxx  句式会自动return  ()=>{}句式需要在花括号里写return
 const BigSon = () => {

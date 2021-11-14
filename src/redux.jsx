@@ -1,11 +1,14 @@
 import React,{useState,useContext,useEffect} from 'react';
 
+let state = undefined
 const store = {
-    state:undefined,
+    getState(){
+        return state
+    },
     reducer:undefined,
     setState(newState){   //store的setState不是hooks的setState
         console.log(store.linsterners)
-        store.state = newState
+        state = newState
         store.linsterners.map(fn=>fn(store.state)) //setState的时候，订阅了store变化的监听者都进行函数回调
     },
     linsterners:[], //存放了全部组件的更新函数，当store变化的时候，会导致所有组件都更新
@@ -19,7 +22,7 @@ const store = {
     }
 }
 export const createStore = (reducer,initState)=>{
-    store.state = initState
+    state = initState
     store.reducer = reducer
     return store
 }
@@ -40,7 +43,7 @@ export const connect = (selector,dispatchSelector) => (Component) =>{  //柯里�
         const dispatch =(action)=>{
             setState(store.reducer(state,action))
         }
-        const {state,setState} = useContext(appContext)
+        const {setState} = useContext(appContext)
         const[,update] = useState({})
         const data =selector ? selector(state) :{state:state}  //如果传了state就是局部的state,没传就是全局的state
         const dispatchers =dispatchSelector ? dispatchSelector(dispatch) : {dispatch}
@@ -48,7 +51,7 @@ export const connect = (selector,dispatchSelector) => (Component) =>{  //柯里�
         useEffect(()=>
             //useEffect有return的话，会在组件销毁之前执行；如果有多次渲染，就会在执行下一个effect之前，上一个effect被清除的时候执行return的函数
            store.subscribe(()=>{   //第一次执行时，会订阅store(就是传一个回调函数给store先存起来),当数据变化后，会先触发dispatch改变数据，然后再执行这个回调函数
-                const newData = selector? selector(store.state) :{state:store.state}
+                const newData = selector? selector(state) :{state:state}
                 if(changed(data,newData)){
                     console.log("changed")
                     update({})
