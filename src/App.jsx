@@ -1,5 +1,6 @@
 import React from 'react';
 import {store,appContext,connect} from  './redux'
+import {connectToUser} from './connectors/connectToUser.jsx'
 const App =() => {
     //const [appState,setAppState] = useState({user:{name:'bobojier',age:18}})
    // const contextValue ={appState,setAppState}
@@ -20,11 +21,6 @@ const SecondSon = () => {
     console.log('二儿子执行了' + Math.random())
     return <section>二儿子<UserModifier x={'d'}>hhh</UserModifier></section>
 }
-
-
-const userSelector = state=>{return {user:state.user}}
-const userDispatcher = (dispatch) => {return {updateUser:(attrs)=>dispatch({type:"updateUser",payload:attrs})}}
-const connectToUser = connect(userSelector,userDispatcher)
 
 const SmallSon = connect((state)=>{
     return {group:state.group}
