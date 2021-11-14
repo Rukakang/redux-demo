@@ -1,17 +1,9 @@
 import React,{useState,useContext,useEffect} from 'react';
 
 export const appContext = React.createContext(null);
-
-export const store = {
-    state:{
-        user:{
-            name:'bobojier',
-            age:18
-        },
-        group:{
-            name:"前端组"
-        }
-    },
+const store = {
+    state:undefined,
+    reducer:undefined,
     setState(newState){   //store的setState不是hooks的setState
         console.log(store.linsterners)
         store.state = newState
@@ -27,19 +19,12 @@ export const store = {
         }
     }
 }
-export const reducer = (state,{type,payload})=>{
-    if(type === "updateUser"){
-        return {
-            ...state,
-            user:{
-                ...state.user,
-                ...payload
-            }
-        }
-    }else{
-        return state
-    }
+export const createStore = (reducer,initState)=>{
+    store.state = initState
+    store.reducer = reducer
+    return store
 }
+
 const changed = (oldState,newState)=>{
     let changed =false
     for(let key in oldState){
@@ -54,7 +39,7 @@ const changed = (oldState,newState)=>{
 export const connect = (selector,dispatchSelector) => (Component) =>{  //柯里化
     return (props)=>{  //接受一个组件，返回一个组件
         const dispatch =(action)=>{
-            setState(reducer(state,action))
+            setState(store.reducer(state,action))
         }
         const {state,setState} = useContext(appContext)
         const[,update] = useState({})
