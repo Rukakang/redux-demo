@@ -1,29 +1,35 @@
 import React,{useState,useContext,useEffect} from 'react';
 
 let state = undefined
+let reducer = undefined
+let linsterners = [] //存放了全部组件的更新函数，当store变化的时候，会导致所有组件都更新
+const setState = (newState)=>{   //store的setState不是hooks的setState
+    console.log(linsterners)
+    state = newState
+    linsterners.map(fn=>fn(store.state)) //setState的时候，订阅了store变化的监听者都进行函数回调
+}
 const store = {
     getState(){
         return state
     },
-    reducer:undefined,
-    setState(newState){   //store的setState不是hooks的setState
-        console.log(store.linsterners)
-        state = newState
-        store.linsterners.map(fn=>fn(store.state)) //setState的时候，订阅了store变化的监听者都进行函数回调
+    dispatch :(action)=>{
+        setState(reducer(state,action))
     },
-    linsterners:[], //存放了全部组件的更新函数，当store变化的时候，会导致所有组件都更新
     subscribe(fn){
         //store发生变化时要执行的函数放入数组里
-        store.linsterners.push(fn)
+        linsterners.push(fn)
         return ()=>{  //return的函数可以取消订阅
-            const index = store.linsterners.indexOf(fn)
-            store.linsterners.splice(index,1)
+            const index = linsterners.indexOf(fn)
+            linsterners.splice(index,1)
         }
     }
 }
-export const createStore = (reducer,initState)=>{
+
+const dispatch = store.dispatch
+
+export const createStore = (_reducer,initState)=>{
     state = initState
-    store.reducer = reducer
+    reducer = _reducer
     return store
 }
 
@@ -40,10 +46,6 @@ const changed = (oldState,newState)=>{
 }
 export const connect = (selector,dispatchSelector) => (Component) =>{  //柯里化
     return (props)=>{  //接受一个组件，返回一个组件
-        const dispatch =(action)=>{
-            setState(store.reducer(state,action))
-        }
-        const {setState} = useContext(appContext)
         const[,update] = useState({})
         const data =selector ? selector(state) :{state:state}  //如果传了state就是局部的state,没传就是全局的state
         const dispatchers =dispatchSelector ? dispatchSelector(dispatch) : {dispatch}
