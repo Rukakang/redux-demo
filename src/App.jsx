@@ -21,6 +21,11 @@ const SecondSon = () => {
     return <section>二儿子<UserModifier x={'d'}>hhh</UserModifier></section>
 }
 
+
+const userSelector = state=>{return {user:state.user}}
+const userDispatcher = (dispatch) => {return {updateUser:(attrs)=>dispatch({type:"updateUser",payload:attrs})}}
+const connectToUser = connect(userSelector,userDispatcher)
+
 const SmallSon = connect((state)=>{
     return {group:state.group}
 })((group) => {
@@ -28,20 +33,16 @@ const SmallSon = connect((state)=>{
     return <section>小儿子</section>
 })
 
-const UserModifier = connect(null,(dispatch)=>{
-    return {updateUser:(attrs)=>dispatch({type:"updateUser",payload:attrs})}
-})(({updateUser,state,children}) => {  //解构赋值，此时的pros为:{x:'d',children:'hhh',updateState:dispatch({type:"updateState",payload}),state:{user:{name:'bobojier',age:18}}}
+const UserModifier = connectToUser(({updateUser,user,children}) => {  //解构赋值，此时的pros为:{x:'d',children:'hhh',updateState:dispatch({type:"updateState",payload}),state:{user:{name:'bobojier',age:18}}}
     console.log('userModifier执行了' + Math.random())
     const onChange = (e) =>{
         updateUser({name:e.target.value})
     }
     return(
-        <input value={state.user.name} onChange={onChange}/>
+        <input value={user.name} onChange={onChange}/>
     )
 })
-const User =connect((state)=>{
-    return {user:state.user}  //柯里化,析构出自己组件想用的那部分数据
-})(
+const User =connectToUser(
     ({user}) =>{
         console.log('user执行了' + Math.random())
         return(<div>{user.name}</div>)
