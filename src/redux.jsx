@@ -40,18 +40,35 @@ export const reducer = (state,{type,payload})=>{
         return state
     }
 }
+const changed = (oldState,newState)=>{
+    let changed =false
+    for(let key in oldState){
+        if(oldState[key] !== newState[key]){
+            changed = true
+            break;
+        }
+    }
+    return changed
 
+}
 export const connect = (selector) => (Component) =>{  //柯里化
     return (props)=>{  //接受一个组件，返回一个组件
         const {state,setState} = useContext(appContext)
         const[,update] = useState({})
         const data =selector ? selector(state) :{state:state}  //如果传了state就是局部的state,没传就是全局的state
+        console.log(`data是：`)
+        console.log(data)
         //订阅store
         useEffect(()=>{
-            store.subscribe(()=>{
-                update({})
+            store.subscribe(()=>{   //第一次执行时，会订阅store(就是传一个回调函数给store先存起来),当数据变化后，会先触发dispatch改变数据，然后再执行这个回调函数
+                console.log(selector)
+                const newData = selector? selector(store.state) :{state:store.state}
+                console.log(newData)
+                if(changed(data,newData)){
+                    update({})
+                }
             })
-        },[])
+        },[selector])
 
         const dispatch =(action)=>{
             setState(reducer(state,action))
