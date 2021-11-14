@@ -1,6 +1,5 @@
 import React,{useState,useContext,useEffect} from 'react';
 
-export const appContext = React.createContext(null);
 const store = {
     state:undefined,
     reducer:undefined,
@@ -59,4 +58,13 @@ export const connect = (selector,dispatchSelector) => (Component) =>{  //柯里�
 
         return <Component {...data} {...props} {...dispatchers} /> //返回的组件中又引入了子组件，子组件的props是包裹子组件的组件透传过来的
     }
+}
+
+const appContext = React.createContext(null);
+export const Provider =({store,children})=>{
+    return(
+        <appContext.Provider value={store}>
+            {children}
+        </appContext.Provider>
+    )
 }

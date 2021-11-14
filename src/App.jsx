@@ -1,5 +1,5 @@
 import React from 'react';
-import {createStore,appContext,connect} from  './redux'
+import {createStore,connect,Provider} from  './redux'
 import {connectToUser} from './connectors/connectToUser.jsx'
 
 let state = {
@@ -30,12 +30,13 @@ const App =() => {
     //const [appState,setAppState] = useState({user:{name:'bobojier',age:18}})
    // const contextValue ={appState,setAppState}
     return(
-        <appContext.Provider value={store}>
+        <Provider store={store}>
             <BigSon/>
             <SecondSon/>
             <SmallSon/>
-        </appContext.Provider>
+        </Provider>
     )
+
 }
 //()=>xxx  句式会自动return  ()=>{}句式需要在花括号里写return
 const BigSon = () => {
