@@ -7,6 +7,9 @@ export const store = {
         user:{
             name:'bobojier',
             age:18
+        },
+        group:{
+            name:"前端组"
         }
     },
     setState(newState){   //store的setState不是hooks的setState

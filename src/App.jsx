@@ -21,10 +21,12 @@ const SecondSon = () => {
     return <section>二儿子<UserModifier x={'d'}>hhh</UserModifier></section>
 }
 
-const SmallSon = () => {
+const SmallSon = connect((state)=>{
+    return {group:state.group}
+})((group) => {
     console.log('小儿子执行了' + Math.random())
     return <section>小儿子</section>
-}
+})
 
 const UserModifier = connect()(({dispatch,state,children}) => {  //解构赋值，此时的pros为:{x:'d',children:'hhh',dispatch:(action)=>{},state:{user:{name:'bobojier',age:18}}}
     console.log('userModifier执行了' + Math.random())
