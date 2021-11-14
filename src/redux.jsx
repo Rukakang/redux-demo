@@ -56,19 +56,16 @@ export const connect = (selector) => (Component) =>{  //柯里化
         const {state,setState} = useContext(appContext)
         const[,update] = useState({})
         const data =selector ? selector(state) :{state:state}  //如果传了state就是局部的state,没传就是全局的state
-        console.log(`data是：`)
-        console.log(data)
         //订阅store
         useEffect(()=>{
             store.subscribe(()=>{   //第一次执行时，会订阅store(就是传一个回调函数给store先存起来),当数据变化后，会先触发dispatch改变数据，然后再执行这个回调函数
-                console.log(selector)
                 const newData = selector? selector(store.state) :{state:store.state}
-                console.log(newData)
                 if(changed(data,newData)){
+                    console.log("changed")
                     update({})
                 }
             })
-        },[selector])
+        },[selector,state]) //如果不取消订阅，当加上state依赖时，会造成重复渲染，比如当二儿子改变两次时，大儿子和二儿子都会渲染两遍，因为每次state变化时，重复订阅了大儿子和二儿子，store.lisenters数组被push了多余的重复回调函数
 
         const dispatch =(action)=>{
             setState(reducer(state,action))
