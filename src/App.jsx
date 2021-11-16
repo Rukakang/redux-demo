@@ -54,13 +54,33 @@ const SmallSon = connect((state)=>{
     return <section>小儿子</section>
 })
 
-const UserModifier = connectToUser(({updateUser,user,children}) => {  //解构赋值，此时的pros为:{x:'d',children:'hhh',updateState:dispatch({type:"updateState",payload}),state:{user:{name:'bobojier',age:18}}}
+//模拟异步请求
+const ajax =()=>{
+    return new Promise((resolve,reject)=>{
+        setTimeout(()=>{
+            resolve({data: {name:"3秒后的user"}})
+        },3000)
+    })
+}
+
+const fetchUser = (dispatch)=>{
+    ajax("/user").then((res) =>{
+        console.log(res.data)
+        dispatch({type:"updateUser",payload:res.data})
+    })
+}
+
+const UserModifier = connect(null,null)(({state,dispatch}) => {  //解构赋值，此时的pros为:{x:'d',children:'hhh',updateState:dispatch({type:"updateState",payload}),state:{user:{name:'bobojier',age:18}}}
     console.log('userModifier执行了' + Math.random())
-    const onChange = (e) =>{
-        updateUser({name:e.target.value})
+    const onClick = (e)=>{
+        fetchUser(dispatch)
     }
     return(
-        <input value={user.name} onChange={onChange}/>
+        <div>
+            <div>User:{state.user.name}</div>
+            <button onClick={onClick}>异步获取user</button>
+        </div>
+
     )
 })
 const User =connectToUser(

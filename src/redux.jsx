@@ -12,6 +12,9 @@ const store = {
         return state
     },
     dispatch :(action)=>{
+        console.log(action)
+        console.log(state)
+        console.log(reducer(state,action))
         setState(reducer(state,action))
     },
     subscribe(fn){
