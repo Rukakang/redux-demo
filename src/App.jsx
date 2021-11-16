@@ -65,22 +65,25 @@ const ajax =()=>{
 
 const fetchUser = (dispatch)=>{
     ajax("/user").then((res) =>{
-        console.log(res.data)
         dispatch({type:"updateUser",payload:res.data})
     })
 }
 
 const UserModifier = connect(null,null)(({state,dispatch}) => {  //解构赋值，此时的pros为:{x:'d',children:'hhh',updateState:dispatch({type:"updateState",payload}),state:{user:{name:'bobojier',age:18}}}
     console.log('userModifier执行了' + Math.random())
+    let preDispatch = dispatch
+    var dispatch =(fn) =>{
+        fn(preDispatch)
+    }
     const onClick = (e)=>{
-        fetchUser(dispatch)
+        //fetchUser(preDispatch)
+        dispatch(fetchUser)
     }
     return(
         <div>
             <div>User:{state.user.name}</div>
             <button onClick={onClick}>异步获取user</button>
         </div>
-
     )
 })
 const User =connectToUser(
