@@ -24,7 +24,16 @@ const store = {
     }
 }
 
-const dispatch = store.dispatch
+let dispatch = store.dispatch
+const preDispatch = dispatch
+dispatch = (action)=>{
+    if(action instanceof Function){
+        action(dispatch)
+    }else{
+        preDispatch(action)
+    }
+}
+
 
 const appContext = React.createContext(null);
 export const Provider =({store,children})=>{

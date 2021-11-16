@@ -71,10 +71,6 @@ const fetchUser = (dispatch)=>{
 
 const UserModifier = connect(null,null)(({state,dispatch}) => {  //解构赋值，此时的pros为:{x:'d',children:'hhh',updateState:dispatch({type:"updateState",payload}),state:{user:{name:'bobojier',age:18}}}
     console.log('userModifier执行了' + Math.random())
-    let preDispatch = dispatch
-    var dispatch =(fn) =>{
-        fn(preDispatch)
-    }
     const onClick = (e)=>{
         //fetchUser(preDispatch)
         dispatch(fetchUser)
