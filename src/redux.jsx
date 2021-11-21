@@ -34,6 +34,20 @@ dispatch = (action)=>{
     }
 }
 
+const preDispatch2 = dispatch
+dispatch = (action)=>{
+    if(action.payload instanceof Promise){
+        action.payload.then(
+            data=>{
+                dispatch({...action,payload:data})
+            }
+        )
+    }else{
+        preDispatch2(action)
+    }
+}
+
+
 
 const appContext = React.createContext(null);
 export const Provider =({store,children})=>{

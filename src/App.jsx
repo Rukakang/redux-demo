@@ -73,7 +73,8 @@ const UserModifier = connect(null,null)(({state,dispatch}) => {  //解构赋值�
     console.log('userModifier执行了' + Math.random())
     const onClick = (e)=>{
         //fetchUser(preDispatch)
-        dispatch(fetchUser)
+        //dispatch(fetchUser)
+        dispatch({type:"updateUser",payload:ajax('/user').then(response=>response.data)})
     }
     return(
         <div>
